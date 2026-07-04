@@ -18,7 +18,7 @@ app.get("/company/:name", async (req, res) => {
   const { data, error } = await supabase
     .from("companies")
     .select("name, description")
-    .eq("name", name)
+    .eq("Name", name)
     .single();
 
   if (error || !data) {
@@ -30,8 +30,8 @@ app.get("/company/:name", async (req, res) => {
 
   res.json({
     found: true,
-    name: data.name,
-    description: data.description
+    name: data.Name,
+    description: data.Description
   });
 });
 
