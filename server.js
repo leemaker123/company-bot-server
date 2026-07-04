@@ -16,27 +16,23 @@ app.get("/company/:name", async (req, res) => {
   const name = req.params.name;
 
   const { data, error } = await supabase
-    .from("Companies")   // ← 여기 중요
-    .select("*")
-    .eq("Name", name);
+    .from("Companies")
+    .select("Name, Description")
+    .eq("Name", name)
+    .single();
 
-  console.log("===== DEBUG =====");
-  console.log("검색어:", name);
-  console.log("data:", data);
-  console.log("error:", error);
-
-  if (error) {
-    return res.json(error);
-  }
-
-  if (!data || data.length === 0) {
+  if (error || !data) {
     return res.json({
       found: false,
-      message: "데이터 없음"
+      message: `${name} 기업설명이 등록되어 있지 않습니다.`
     });
   }
 
-  return res.json(data[0]);
+  res.json({
+    found: true,
+    name: data.Name,
+    description: data.Description
+  });
 });
 
 const PORT = process.env.PORT || 3000;
